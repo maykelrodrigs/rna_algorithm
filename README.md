@@ -1,0 +1,3 @@
+# rna_algorithm
+
+Weightless neural networks are based on networks of Random Access Memory (RAM) nodes [1]. A RAM–based neuron/node is capable of recognizing n bit inputs (n–tuple) coming from the retina (usually a black and white image). The WNNs have a basis for their biological plausibility because of the straightforward analogy between the address decoding in RAMs and the integration of excitation and inhibitory signaling performed by the neuron dendritic tree. WiSARD systems are a particular type of WNN. While the use of n–tuple RAM nodes in pattern recognition problems is old, dating about
