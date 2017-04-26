@@ -583,6 +583,7 @@
               <SubComponents>
                 <Component class="javax.swing.JTextArea" name="txtResultado">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" value="20"/>
                     <Property name="rows" type="int" value="4"/>
                   </Properties>
@@ -620,6 +621,7 @@
           <SubComponents>
             <Component class="javax.swing.JTextArea" name="txtServidor">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="columns" type="int" value="20"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Comic Sans MS" size="12" style="0"/>

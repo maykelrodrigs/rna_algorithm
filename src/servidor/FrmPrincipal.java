@@ -1,3 +1,7 @@
+package servidor;
+
+import java.util.ArrayList;
+
 
 
 /*
@@ -12,13 +16,20 @@
  */
 public class FrmPrincipal extends javax.swing.JFrame {
 
+    CtrlServidor control;
+    
     /**
      * Creates new form frmRna
+     * @param control
      */
-    public FrmPrincipal() {
+    public FrmPrincipal( CtrlServidor control ) {
+        
+        this.control = control;
+        
         initComponents();
-        txtServidor.setText("Servidor conectado.");
         this.setLocationRelativeTo(null);
+        txtServidor.setText("Servidor conectado.\n");
+        
     }
 
     /**
@@ -248,6 +259,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Resultado", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Comic Sans MS", 0, 12))); // NOI18N
         jPanel5.setLayout(new java.awt.BorderLayout());
 
+        txtResultado.setEditable(false);
         txtResultado.setColumns(20);
         txtResultado.setRows(4);
         jScrollPane1.setViewportView(txtResultado);
@@ -300,6 +312,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Servidor", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Comic Sans MS", 1, 10))); // NOI18N
         jPanel4.setLayout(new java.awt.BorderLayout());
 
+        txtServidor.setEditable(false);
         txtServidor.setColumns(20);
         txtServidor.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         txtServidor.setRows(5);
@@ -340,7 +353,28 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-        // TODO add your handling code here:
+
+        limparDados();
+        
+    }//GEN-LAST:event_btnLimparActionPerformed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+       
+       boolean fase = radioTreinamento.isSelected(); 
+       String padrao = txtPadrao.getText();  
+       
+       if ( control.criarPacote(gerarVetor(), fase, padrao) ) { 
+            txtServidor.append("Dados enviados...\n");
+            limparDados();
+       } else {
+            txtServidor.append("Problema ao enviar os dados.\n");
+       } 
+       
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
+    
+    private void limparDados() {
+        
         ck1.setSelected(false);
         ck2.setSelected(false);
         ck3.setSelected(false);
@@ -369,87 +403,39 @@ public class FrmPrincipal extends javax.swing.JFrame {
         txtPadrao.setText("");
         txtResultado.setText("");
         radioTreinamento.setSelected(true);
-    }//GEN-LAST:event_btnLimparActionPerformed
-
-    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        // TODO add your handling code here:
         
-       int vetor[] = gerarVetor();
-       boolean fase = radioTreinamento.isSelected() ? true : false; 
-       String padrao = txtPadrao.getText();
-       
-        
-    }//GEN-LAST:event_btnEnviarActionPerformed
-
-    private int[] gerarVetor() {
-        
-        int vetor[] = new int[25];
-        
-        vetor[0] = ck1.isSelected() == true ? 1 : 0;
-        vetor[1] = ck2.isSelected() == true ? 1 : 0;
-        vetor[2] = ck3.isSelected() == true ? 1 : 0;
-        vetor[3] = ck4.isSelected() == true ? 1 : 0;
-        vetor[4] = ck5.isSelected() == true ? 1 : 0;
-        vetor[5] = ck6.isSelected() == true ? 1 : 0;
-        vetor[6] = ck7.isSelected() == true ? 1 : 0;
-        vetor[7] = ck8.isSelected() == true ? 1 : 0;
-        vetor[8] = ck9.isSelected() == true ? 1 : 0;
-        vetor[9] = ck10.isSelected() == true ? 1 : 0;
-        vetor[10] = ck11.isSelected() == true ? 1 : 0;
-        vetor[11] = ck12.isSelected() == true ? 1 : 0;
-        vetor[12] = ck13.isSelected() == true ? 1 : 0;
-        vetor[13] = ck14.isSelected() == true ? 1 : 0;
-        vetor[14] = ck15.isSelected() == true ? 1 : 0;
-        vetor[15] = ck16.isSelected() == true ? 1 : 0;
-        vetor[16] = ck17.isSelected() == true ? 1 : 0;
-        vetor[17] = ck18.isSelected() == true ? 1 : 0;
-        vetor[18] = ck19.isSelected() == true ? 1 : 0;
-        vetor[19] = ck20.isSelected() == true ? 1 : 0;
-        vetor[20] = ck21.isSelected() == true ? 1 : 0;
-        vetor[21] = ck22.isSelected() == true ? 1 : 0;
-        vetor[22] = ck23.isSelected() == true ? 1 : 0;
-        vetor[23] = ck24.isSelected() == true ? 1 : 0;
-        vetor[24] = ck25.isSelected() == true ? 1 : 0;
-        
-        return vetor;
     }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FrmPrincipal().setVisible(true);
-            }
-        });
+    private ArrayList gerarVetor() {
+        
+        ArrayList array = new ArrayList();
+        
+        array.add( ck1.isSelected() == true ? 1 : 0 );
+        array.add( ck2.isSelected() == true ? 1 : 0 );
+        array.add( ck3.isSelected() == true ? 1 : 0 );
+        array.add( ck4.isSelected() == true ? 1 : 0 );
+        array.add( ck5.isSelected() == true ? 1 : 0 );
+        array.add( ck6.isSelected() == true ? 1 : 0 );
+        array.add( ck7.isSelected() == true ? 1 : 0 );
+        array.add( ck8.isSelected() == true ? 1 : 0 );
+        array.add( ck9.isSelected() == true ? 1 : 0 );
+        array.add( ck10.isSelected() == true ? 1 : 0 );
+        array.add( ck11.isSelected() == true ? 1 : 0 );
+        array.add( ck12.isSelected() == true ? 1 : 0 );
+        array.add( ck13.isSelected() == true ? 1 : 0 );
+        array.add( ck14.isSelected() == true ? 1 : 0 );
+        array.add( ck15.isSelected() == true ? 1 : 0 );
+        array.add( ck16.isSelected() == true ? 1 : 0 );
+        array.add( ck17.isSelected() == true ? 1 : 0 );
+        array.add( ck18.isSelected() == true ? 1 : 0 );
+        array.add( ck19.isSelected() == true ? 1 : 0 );
+        array.add( ck20.isSelected() == true ? 1 : 0 );
+        array.add( ck21.isSelected() == true ? 1 : 0 );
+        array.add( ck22.isSelected() == true ? 1 : 0 );
+        array.add( ck23.isSelected() == true ? 1 : 0 );
+        array.add( ck24.isSelected() == true ? 1 : 0 );
+        array.add( ck25.isSelected() == true ? 1 : 0 );
+        
+        return array;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
