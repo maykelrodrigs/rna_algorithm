@@ -24,13 +24,13 @@ public class CtrlServidor {
     public CtrlServidor() {
         
         clientes = new ArrayList();
-        servidor = new Servidor();
+        servidor = new Servidor( this );
+        frmPrincipal = new FrmPrincipal( this );
         
     }
     
     public void janelaInicial() {
         
-        frmPrincipal = new FrmPrincipal( this );
         frmPrincipal.setVisible(true);
         
     }
@@ -50,7 +50,7 @@ public class CtrlServidor {
         
         Cliente cliente;
         entrada = trocarPosicao(entrada);
-        pacote =  new Pacote(entrada, fase);
+        pacote =  new Pacote(entrada, fase, false);
         
         if( fase ) {
             
@@ -80,20 +80,19 @@ public class CtrlServidor {
     }
     
     public void inserirCliente(Cliente c) {
-        if ( !clientes.contains( c) )
+        if ( !clientes.contains(c) ) {
             clientes.add(c);
-    }
-    
-    public void removerCliente(Cliente c) {
-        clientes.remove(c);
+            frmPrincipal.appendServidor("Cliente conectado: " + c.getCodigo());
+        }
     }
     
     public static void main(String[] args) {
         
         CtrlServidor ctrl = new CtrlServidor();
-        //ctrl.janelaInicial();
+        ctrl.janelaInicial();
         
-        servidor.receberTCP();
+        Thread threadServidor = new Thread(servidor);
+        threadServidor.start();
         
     }
     

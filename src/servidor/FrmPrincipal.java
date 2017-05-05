@@ -229,6 +229,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
         grupoFase.add(radioExecucao);
         radioExecucao.setFont(new java.awt.Font("Comic Sans MS", 0, 12)); // NOI18N
         radioExecucao.setText("Execução");
+        radioExecucao.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                radioExecucaoStateChanged(evt);
+            }
+        });
         jPanel3.add(radioExecucao, java.awt.BorderLayout.CENTER);
 
         grupoFase.add(radioTreinamento);
@@ -372,6 +377,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
        
     }//GEN-LAST:event_btnEnviarActionPerformed
 
+    private void radioExecucaoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radioExecucaoStateChanged
+        
+        if ( radioExecucao.isSelected()) txtPadrao.setEnabled(false); 
+        else txtPadrao.setEnabled(true);
+        
+    }//GEN-LAST:event_radioExecucaoStateChanged
+
+    public void appendServidor(String m) {
+        txtServidor.append(m + "\n");
+    }
+    
+    public void clearServidor() {
+        txtServidor.setText("");
+    }
     
     private void limparDados() {
         

@@ -24,35 +24,35 @@ import padrao.Pacote;
  *
  * @author mrodrigues
  */
-public class Servidor {
+public class Servidor implements Runnable {
     
-    private final int port = 12345;
-    
-    //Threads thread;
+    private final int PORT = 12345;
+    private final String ADDRESS = "228.5.6.7";
+    CtrlServidor ctrlServidor;
 
-    public Servidor() {
-
-        //this.thread     = new Threads(this);        
-        //thread.start();
-                
+    public Servidor(CtrlServidor ctrlServidor) {
+        this.ctrlServidor = ctrlServidor;
     }
-    
+            
     public void enviarMulticast(Pacote pacote) {
         
         try {
             
-            MulticastSocket s = new MulticastSocket();
-            InetAddress group = InetAddress.getByName("228.5.6.7");
-            s.joinGroup(group);
+            System.out.println("Enviando!");
+            
+            MulticastSocket socket = new MulticastSocket(PORT);
+            InetAddress group = InetAddress.getByName(ADDRESS);
+            socket.joinGroup(group);
 
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream(6400);
-            final ObjectOutputStream oos = new ObjectOutputStream(baos);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(pacote);
-            final byte[] data = baos.toByteArray();
-            final DatagramPacket packet = new DatagramPacket(data, data.length);
+            byte[] data = baos.toByteArray();
 
-            s.send(packet);
-            s.close();
+            socket.send(new DatagramPacket(data, data.length, group, PORT));
+            socket.close();
+            
+            System.out.println("Enviado!");
             
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,29 +61,39 @@ public class Servidor {
     
     public void receberTCP() {
         
-        ObjectInputStream entrada;
-
         try {
             
-            ServerSocket server = new ServerSocket(port);
-            Socket socket;
-            
-            while (true) {
-                
+            while(true) {
+                System.out.println("Aguardando pacotes do cliente...");
+                ServerSocket server = new ServerSocket(PORT);
+                Socket socket;
+
                 socket = server.accept();
-                
+
                 InputStream istream = socket.getInputStream();
                 ObjectInputStream oistream = new ObjectInputStream(istream);
                 Pacote pacote = (Pacote) oistream.readObject();
-                System.out.println(pacote.getCliente().getCodigo());
+
+                if ( pacote.isConexao() )
+                    ctrlServidor.inserirCliente(pacote.getCliente());
                 
                 socket.close();
-
+                server.close();
             }
-
-        } catch (Exception e) {
-            System.err.println("Erro: " + e.toString());
+            
+        } catch (IOException eio) {
+            System.out.println("Couldn't get I/O for the connection");
+            System.exit(1);
+        } catch (ClassNotFoundException cne) {
+            System.out.println("Wanted class Pacote, but got class " + cne);
         }
+    }
+
+    @Override
+    public void run() {
+    
+        receberTCP();
+        
     }
     
 }

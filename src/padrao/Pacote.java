@@ -17,19 +17,24 @@ public class Pacote implements Serializable {
     private Cliente cliente;
     private ArrayList entrada;
     private boolean fase;
+    private int pontuacao;
+    private boolean conexao;
+    
+    public Pacote() {}
 
-    public Pacote(ArrayList entrada, boolean fase) {
+    public Pacote(ArrayList entrada, boolean fase, boolean conexao) {
         this.entrada = new ArrayList();
         this.entrada.addAll(entrada);
         this.fase = fase;
+        this.conexao = conexao;
         this.cliente = null;
     }
 
-    public Pacote(Cliente cliente) {
+    public Pacote(Cliente cliente, boolean conexao) {
         this.cliente = cliente;
+        this.conexao = conexao;
     }
     
-
     public Cliente getCliente() {
         return cliente;
     }
@@ -46,4 +51,15 @@ public class Pacote implements Serializable {
         this.cliente = cliente;
     }
     
+    public int getPontuacao() {
+        return pontuacao;
+    }
+
+    public void setPontuacao(int pontuacao) {
+        this.pontuacao = pontuacao;
+    }
+
+    public boolean isConexao() {
+        return conexao;
+    }
 }

@@ -6,6 +6,7 @@
 package padrao;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -15,7 +16,6 @@ public class Cliente implements Serializable {
     
     private final String codigo;
     private String padrao;
-    private int pontuacao;
 
     public Cliente(String codigo) {
         this.codigo = codigo;
@@ -33,12 +33,20 @@ public class Cliente implements Serializable {
         this.padrao = padrao;
     }
 
-    public int getPontuacao() {
-        return pontuacao;
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.codigo);
+        return hash;
     }
-
-    public void setPontuacao(int pontuacao) {
-        this.pontuacao = pontuacao;
+    
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Cliente) {
+            Cliente toCompare = (Cliente) o;
+            return this.codigo.equals(toCompare.codigo);
+        }
+        return false;
     }
     
 }

@@ -6,8 +6,9 @@
 
 package discriminador;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.DatagramPacket;
@@ -23,9 +24,10 @@ import padrao.Pacote;
  *
  * @author mrodrigues
  */
-public final class CtrlCliente {
+public final class CtrlCliente implements Runnable {
     
-    private final int port = 12345;
+    private final int PORT = 12345;
+    private final String ADDRESS = "228.5.6.7";
     
 
     public CtrlCliente() {
@@ -34,24 +36,34 @@ public final class CtrlCliente {
     
     public void receberMulticast() {
         
+        final int bufferSize = 1024 * 4;
+        
         try {
-            MulticastSocket s = new MulticastSocket(port);
-            InetAddress group = InetAddress.getByName("228.5.6.7");
+            
+            MulticastSocket socket = new MulticastSocket(PORT);
+            InetAddress group = InetAddress.getByName(ADDRESS);
+            socket.joinGroup(group);
             
             while(true) {
                 
-                s.joinGroup(group);
+                System.out.println("Aguardando pacotes do servidor...");
+ 
+                byte[] buffer = new byte[bufferSize];
+                socket.receive(new DatagramPacket(buffer, bufferSize, group, PORT));
+                System.out.println("Pacote recebido!");
+ 
+                ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+                ObjectInputStream ois = new ObjectInputStream(bais);
                 
-                byte buf[] = new byte[1024];
-                DatagramPacket pack = new DatagramPacket(buf, buf.length);
-                s.receive(pack);
+                try {
+                    
+                    Pacote readObject = (Pacote)ois.readObject();
+                    
+                    
+                } catch (IOException | ClassNotFoundException e) {
+                    System.out.println("No object could be read from the received UDP datagram.");
+                }
                 
-                System.out.println("Recebido de: " + pack.getAddress().toString() +
-		    ":" + pack.getPort());
-                
-                System.out.write(pack.getData(),0,pack.getLength());
-                
-                s.leaveGroup(group);
             }
 
         } catch (IOException ex) {
@@ -59,39 +71,47 @@ public final class CtrlCliente {
         }
     }
     
-    public void enviarTCP(Pacote pacote) throws IOException {
+    public void enviarTCP(Pacote pacote) {
         
         ObjectOutputStream  saida;
         Socket socket;
         
-        
-        
         try {
-            socket = new Socket(InetAddress.getLocalHost().getHostName(), port);
+            
+            socket = new Socket(InetAddress.getLocalHost().getHostName(), PORT);
             
             OutputStream oStream = socket.getOutputStream();
-            ObjectOutputStream ooStream = new ObjectOutputStream(oStream);
-            ooStream.writeObject(pacote);  // send serilized payload
-            ooStream.close();
+            ObjectOutputStream oostream = new ObjectOutputStream(oStream);
+            oostream.writeObject(pacote); 
+            oostream.close();
             
             socket.close();
 
-        } catch (IOException e) {
-            System.err.println("Erro: " + e.toString());
+        } catch (IOException ioe) {
+            System.out.println("Couldn't get I/O for the connection");
+            System.exit(1);
         }  
     }
     
     public static void main(String[] args) {
         
         CtrlCliente ctrl = new CtrlCliente();
-        Cliente cliente = new Cliente("123");
-        Pacote pacote = new Pacote(cliente);
         
-        try {
-            ctrl.enviarTCP(pacote);
-        } catch (IOException ex) {
-            Logger.getLogger(CtrlCliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // Conectar ao servidor
+        Cliente cliente = new Cliente("321");
+        Pacote pacote = new Pacote(cliente, true);
+        ctrl.enviarTCP(pacote);
+        
+        // Receber os pacotes do servidor
+        Thread threadServidor = new Thread(ctrl);
+        threadServidor.start();
+        
+    }
+
+    @Override
+    public void run() {
+        
+        receberMulticast();
         
     }
 }
