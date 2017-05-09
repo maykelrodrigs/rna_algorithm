@@ -5,9 +5,9 @@
         <group>
             <file>file:/home/mrodrigues/Projetos/rna_algorithm/src/servidor/CtrlServidor.java</file>
             <file>file:/home/mrodrigues/Projetos/rna_algorithm/src/discriminador/CtrlCliente.java</file>
-            <file>file:/home/mrodrigues/Projetos/rna_algorithm/src/padrao/Pacote.java</file>
             <file>file:/home/mrodrigues/Projetos/rna_algorithm/src/servidor/Servidor.java</file>
             <file>file:/home/mrodrigues/Projetos/rna_algorithm/src/servidor/FrmPrincipal.java</file>
+            <file>file:/home/mrodrigues/Projetos/rna_algorithm/src/discriminador/Discriminador.java</file>
         </group>
     </open-files>
 </project-private>

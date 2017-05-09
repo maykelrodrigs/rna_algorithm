@@ -266,6 +266,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         txtResultado.setEditable(false);
         txtResultado.setColumns(20);
+        txtResultado.setFont(new java.awt.Font("Comic Sans MS", 0, 10)); // NOI18N
         txtResultado.setRows(4);
         jScrollPane1.setViewportView(txtResultado);
 
@@ -365,14 +366,16 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
        
-       boolean fase = radioTreinamento.isSelected(); 
+       limparResultado();
+       
+       boolean fase = radioTreinamento.isSelected() ? true : false; 
        String padrao = txtPadrao.getText();  
        
        if ( control.criarPacote(gerarVetor(), fase, padrao) ) { 
             txtServidor.append("Dados enviados...\n");
             limparDados();
        } else {
-            txtServidor.append("Problema ao enviar os dados.\n");
+            txtServidor.append("ERRO: Problema ao enviar os dados.\n");
        } 
        
     }//GEN-LAST:event_btnEnviarActionPerformed
@@ -384,11 +387,19 @@ public class FrmPrincipal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_radioExecucaoStateChanged
 
-    public void appendServidor(String m) {
+    public void escreverServidor(String m) {
         txtServidor.append(m + "\n");
     }
     
-    public void clearServidor() {
+    public void escreverResultado(String m) {
+        txtResultado.append(m + "\n");
+    }
+    
+    public void limparResultado() {
+        txtResultado.setText("");
+    }
+    
+    public void limparServidor() {
         txtServidor.setText("");
     }
     
@@ -421,7 +432,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         ck25.setSelected(false);
         txtPadrao.setText("");
         txtResultado.setText("");
-        radioTreinamento.setSelected(true);
+        //radioTreinamento.setSelected(true);
         
     }
     private ArrayList gerarVetor() {

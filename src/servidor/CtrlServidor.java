@@ -16,16 +16,21 @@ import padrao.Pacote;
  */
 public class CtrlServidor {
    
-    private FrmPrincipal frmPrincipal;
-    private Pacote pacote;
+    private final FrmPrincipal frmPrincipal;
     private final ArrayList<Cliente> clientes;
     private static Servidor servidor;
+    
+    private int pontuacao;
+    private int recebidos;
+    private String padrao;
 
     public CtrlServidor() {
         
         clientes = new ArrayList();
         servidor = new Servidor( this );
         frmPrincipal = new FrmPrincipal( this );
+        recebidos = 0;
+        pontuacao = 0;
         
     }
     
@@ -42,26 +47,55 @@ public class CtrlServidor {
         Collections.swap(array, 17, 15);
         Collections.swap(array, 21, 8);
         Collections.swap(array, 11, 19);
+        Collections.swap(array, 5, 13);
         
         return array;
+    }
+    
+    public void somarPontos(Pacote pacote) {
+        
+        recebidos++;
+        
+        frmPrincipal.escreverResultado("Cliente " + pacote.getCliente().getCodigo() +
+                    ": " + pacote.getCliente().getPadrao() +
+                " - " + pacote.getPontuacao());
+        
+        if(pacote.getPontuacao() > pontuacao) {
+            pontuacao = pacote.getPontuacao();
+            padrao = pacote.getCliente().getPadrao(); 
+        }
+        
+        if (recebidos == clientes.size()) {
+            //frmPrincipal.escreverResultado("PADRÃO: " + padrao);
+            recebidos = 0;
+            //padrao = "";
+        }
+        
     }
     
     public boolean criarPacote(ArrayList entrada, boolean fase, String padrao) {
         
         Cliente cliente;
         entrada = trocarPosicao(entrada);
-        pacote =  new Pacote(entrada, fase, false);
+        Pacote pacote =  new Pacote(entrada, fase, false);
         
-        if( fase ) {
-            
-            cliente = buscarCliente(padrao);
-            if(cliente == null) return false;
-            pacote.setCliente(cliente); 
-            
-        } 
+        if( clientes.size() > 0 ) {
         
-        servidor.enviarMulticast(pacote);
-        return true;
+            if( fase ) {
+
+                cliente = buscarCliente(padrao);
+                if(cliente == null) return false;
+                pacote.setCliente(cliente); 
+                frmPrincipal.escreverServidor("Enviado para cliente: " + cliente.getCodigo());
+
+            } 
+
+            servidor.enviarMulticast(pacote);
+            return true;
+        }
+        
+        frmPrincipal.escreverServidor("ALERTA: Não há clientes conectados.");
+        return false;
     }
     
     public Cliente buscarCliente(String padrao) {
@@ -82,7 +116,7 @@ public class CtrlServidor {
     public void inserirCliente(Cliente c) {
         if ( !clientes.contains(c) ) {
             clientes.add(c);
-            frmPrincipal.appendServidor("Cliente conectado: " + c.getCodigo());
+            frmPrincipal.escreverServidor("Cliente conectado: " + c.getCodigo());
         }
     }
     

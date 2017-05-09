@@ -35,6 +35,12 @@ public class Pacote implements Serializable {
         this.conexao = conexao;
     }
     
+    public Pacote(Cliente cliente, int pontuacao) {
+        this.cliente = cliente;
+        this.pontuacao = pontuacao;
+        this.conexao = false;
+    }
+    
     public Cliente getCliente() {
         return cliente;
     }
@@ -62,4 +68,6 @@ public class Pacote implements Serializable {
     public boolean isConexao() {
         return conexao;
     }
+    
+    
 }

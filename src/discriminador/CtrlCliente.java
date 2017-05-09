@@ -28,9 +28,14 @@ public final class CtrlCliente implements Runnable {
     
     private final int PORT = 12345;
     private final String ADDRESS = "228.5.6.7";
+    private final Discriminador discriminador;
+    private static Cliente cliente;
     
 
     public CtrlCliente() {
+        
+        discriminador = new Discriminador();
+        cliente = new Cliente("121");
         
     }
     
@@ -57,8 +62,21 @@ public final class CtrlCliente implements Runnable {
                 
                 try {
                     
-                    Pacote readObject = (Pacote)ois.readObject();
+                    Pacote entrada = (Pacote)ois.readObject();
                     
+                    if (entrada.isFase()) {
+                        
+                        if ( cliente.getCodigo().equals( entrada.getCliente().getCodigo() )) {
+                            cliente.setPadrao( entrada.getCliente().getPadrao() );                  
+                            discriminador.inserirDados(entrada.getEntrada());
+                        }
+                        
+                    } else {
+                        int valor = discriminador.buscarDados(entrada.getEntrada());
+                        Pacote pacote = new Pacote(cliente, valor);
+                        enviarTCP(pacote);
+                    
+                    }
                     
                 } catch (IOException | ClassNotFoundException e) {
                     System.out.println("No object could be read from the received UDP datagram.");
@@ -98,7 +116,6 @@ public final class CtrlCliente implements Runnable {
         CtrlCliente ctrl = new CtrlCliente();
         
         // Conectar ao servidor
-        Cliente cliente = new Cliente("321");
         Pacote pacote = new Pacote(cliente, true);
         ctrl.enviarTCP(pacote);
         

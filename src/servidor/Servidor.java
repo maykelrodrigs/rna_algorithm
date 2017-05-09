@@ -38,8 +38,6 @@ public class Servidor implements Runnable {
         
         try {
             
-            System.out.println("Enviando!");
-            
             MulticastSocket socket = new MulticastSocket(PORT);
             InetAddress group = InetAddress.getByName(ADDRESS);
             socket.joinGroup(group);
@@ -51,8 +49,6 @@ public class Servidor implements Runnable {
 
             socket.send(new DatagramPacket(data, data.length, group, PORT));
             socket.close();
-            
-            System.out.println("Enviado!");
             
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
@@ -76,6 +72,8 @@ public class Servidor implements Runnable {
 
                 if ( pacote.isConexao() )
                     ctrlServidor.inserirCliente(pacote.getCliente());
+                else
+                    ctrlServidor.somarPontos(pacote);
                 
                 socket.close();
                 server.close();
