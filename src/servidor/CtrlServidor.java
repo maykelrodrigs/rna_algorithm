@@ -23,6 +23,7 @@ public class CtrlServidor {
     private int pontuacao;
     private int recebidos;
     private String padrao;
+    private int bleaching = 2;
 
     public CtrlServidor() {
         
@@ -54,6 +55,9 @@ public class CtrlServidor {
     
     public void somarPontos(Pacote pacote) {
         
+        frmPrincipal.escreverServidor("Dados recebidos do cliente: " 
+                + pacote.getCliente().getCodigo());
+        
         recebidos++;
         
         frmPrincipal.escreverResultado("Cliente " + pacote.getCliente().getCodigo() +
@@ -66,9 +70,9 @@ public class CtrlServidor {
         }
         
         if (recebidos == clientes.size()) {
-            //frmPrincipal.escreverResultado("PADRÃO: " + padrao);
             recebidos = 0;
-            //padrao = "";
+            pontuacao = 0;
+            frmPrincipal.escreverResultado("Padrão: " + padrao);
         }
         
     }

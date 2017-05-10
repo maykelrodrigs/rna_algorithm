@@ -35,7 +35,7 @@ public final class CtrlCliente implements Runnable {
     public CtrlCliente() {
         
         discriminador = new Discriminador();
-        cliente = new Cliente("121");
+        cliente = new Cliente("Cliente3");
         
     }
     

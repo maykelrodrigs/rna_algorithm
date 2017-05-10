@@ -68,6 +68,7 @@ public class Discriminador {
         } catch (InterruptedException ex) {
             Logger.getLogger(Discriminador.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return soma;
     
     }

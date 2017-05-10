@@ -266,7 +266,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         txtResultado.setEditable(false);
         txtResultado.setColumns(20);
-        txtResultado.setFont(new java.awt.Font("Comic Sans MS", 0, 10)); // NOI18N
+        txtResultado.setFont(new java.awt.Font("Comic Sans MS", 0, 11)); // NOI18N
         txtResultado.setRows(4);
         jScrollPane1.setViewportView(txtResultado);
 
